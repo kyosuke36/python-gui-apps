@@ -1,120 +1,159 @@
 import tkinter as tk
 import random
 
-class TicTacToe:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("まるばつゲーム")
-        
-        # ボタンのリスト
-        self.buttons = [[None for _ in range(3)] for _ in range(3)]
-        self.board = [[None for _ in range(3)] for _ in range(3)]
-        
-        # ボタンを作成し、グリッドに配置
-        for i in range(3):
-            for j in range(3):
-                self.buttons[i][j] = tk.Button(root, text="", font=("Arial", 60), width=5, height=2, command=lambda row=i, col=j: self.player_move(row, col))
-                self.buttons[i][j].grid(row=i, column=j)
-        
-        # ゲーム終了フラグ
-        self.game_over = False
+# メインウィンドウを作成
+window = tk.Tk()
+window.title("まるばつゲーム")
+window.geometry("600x400")
+bg_color = "#333333"  # ダークグレー
+fg_color = "#FFFFFF"  # 白
+window.configure(bg=bg_color)
 
-    def player_move(self, row, col):
-        if not self.game_over and self.board[row][col] is None:
-            self.buttons[row][col].config(text="○")
-            self.board[row][col] = "O"
-            if self.check_winner("O"):
-                self.show_winner("○の勝ちです！")
-                return
-            self.computer_move()
-            if self.check_winner("X"):
-                self.show_winner("×の勝ちです！")
+# フレームを作成し、メインウィンドウに配置
+frame = tk.Frame(window, bg=bg_color)
+frame.pack(expand=True, anchor='n')
 
-    def computer_move(self):
-        # NPCの動きを実装する
-        best_move = None
-        best_score = -float('inf')
+# ボードの状態を保持するリスト
+board = [["" for _ in range(3)] for _ in range(3)]
 
-        for i in range(3):
-            for j in range(3):
-                if self.board[i][j] is None:
-                    self.board[i][j] = "X"
-                    score = self.minimax(self.board, 0, False)
-                    self.board[i][j] = None
-                    if score > best_score:
-                        best_score = score
-                        best_move = (i, j)
-        
-        if best_move:
-            row, col = best_move
-            self.buttons[row][col].config(text="×")
-            self.board[row][col] = "X"
-
-    def minimax(self, board, depth, is_maximizing):
-        scores = {"X": 1, "O": -1, "Tie": 0}
-        
-        result = self.check_winner_minimax(board)
-        if result:
-            return scores[result]
-        
-        if is_maximizing:
-            best_score = -float('inf')
-            for i in range(3):
-                for j in range(3):
-                    if board[i][j] is None:
-                        board[i][j] = "X"
-                        score = self.minimax(board, depth + 1, False)
-                        board[i][j] = None
-                        best_score = max(score, best_score)
-            return best_score
-        else:
-            best_score = float('inf')
-            for i in range(3):
-                for j in range(3):
-                    if board[i][j] is None:
-                        board[i][j] = "O"
-                        score = self.minimax(board, depth + 1, True)
-                        board[i][j] = None
-                        best_score = min(score, best_score)
-            return best_score
-
-    def check_winner_minimax(self, board):
-        # 横、縦、斜めのいずれかがすべて同じプレイヤーなら勝ち
-        for i in range(3):
-            if board[i][0] == board[i][1] == board[i][2] and board[i][0] is not None:
-                return board[i][0]
-            if board[0][i] == board[1][i] == board[2][i] and board[0][i] is not None:
-                return board[0][i]
-        if board[0][0] == board[1][1] == board[2][2] and board[0][0] is not None:
-            return board[0][0]
-        if board[0][2] == board[1][1] == board[2][0] and board[0][2] is not None:
-            return board[0][2]
-        
-        # 引き分け
-        if all(board[i][j] is not None for i in range(3) for j in range(3)):
-            return "Tie"
-        
-        return None
-
-    def check_winner(self, player):
-        # 横、縦、斜めのいずれかがすべて同じプレイヤーなら勝ち
-        for i in range(3):
-            if all(self.board[i][j] == player for j in range(3)):
-                return True
-            if all(self.board[j][i] == player for j in range(3)):
-                return True
-        if all(self.board[i][i] == player for i in range(3)):
-            return True
-        if all(self.board[i][2-i] == player for i in range(3)):
-            return True
-        return False
+# 勝利条件をチェックする関数
+def check_winner():
+    # 行をチェック
+    for row in board:
+        if row[0] == row[1] == row[2] and row[0] != "":
+            return row[0]
     
-    def show_winner(self, message):
-        self.game_over = True
-        winner_label = tk.Label(self.root, text=message, font=("Arial", 24))
-        winner_label.grid(row=3, column=0, columnspan=3)
+    # 列をチェック
+    for col in range(3):
+        if board[0][col] == board[1][col] == board[2][col] and board[0][col] != "":
+            return board[0][col]
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    game = TicTacToe(root)
-    root.mainloop()
+    # 対角線をチェック
+    if board[0][0] == board[1][1] == board[2][2] and board[0][0] != "":
+        return board[0][0]
+    if board[0][2] == board[1][1] == board[2][0] and board[0][2] != "":
+        return board[0][2]
+
+    return None
+
+def button_action1():
+    if board[0][0] == "":
+        board[0][0] = "⚪︎"
+        button1.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+def button_action2():
+    if board[0][1] == "":
+        board[0][1] = "⚪︎"
+        button2.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+def button_action3():
+    if board[0][2] == "":
+        board[0][2] = "⚪︎"
+        button3.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+def button_action4():
+    if board[1][0] == "":
+        board[1][0] = "⚪︎"
+        button4.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+def button_action5():
+    if board[1][1] == "":
+        board[1][1] = "⚪︎"
+        button5.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+def button_action6():
+    if board[1][2] == "":
+        board[1][2] = "⚪︎"
+        button6.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+def button_action7():
+    if board[2][0] == "":
+        board[2][0] = "⚪︎"
+        button7.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+def button_action8():
+    if board[2][1] == "":
+        board[2][1] = "⚪︎"
+        button8.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+def button_action9():
+    if board[2][2] == "":
+        board[2][2] = "⚪︎"
+        button9.config(text="⚪︎")
+        winner = check_winner()
+        if winner:
+            label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+
+button1 = tk.Button(frame, text="　", command=button_action1)
+button1.grid(row=2, column=0, padx=10, pady=10)
+
+button2 = tk.Button(frame, text="　", command=button_action2)
+button2.grid(row=2, column=1, padx=10, pady=10)
+
+button3 = tk.Button(frame, text="　", command=button_action3)
+button3.grid(row=2, column=2, padx=10, pady=10)
+
+button4 = tk.Button(frame, text="　", command=button_action4)
+button4.grid(row=3, column=0, padx=10, pady=10)
+
+button5 = tk.Button(frame, text="　", command=button_action5)
+button5.grid(row=3, column=1, padx=10, pady=10)
+
+button6 = tk.Button(frame, text="　", command=button_action6)
+button6.grid(row=3, column=2, padx=10, pady=10)
+
+button7 = tk.Button(frame, text="　", command=button_action7)
+button7.grid(row=4, column=0, padx=10, pady=10)
+
+button8 = tk.Button(frame, text="　", command=button_action8)
+button8.grid(row=4, column=1, padx=10, pady=10)
+
+button9 = tk.Button(frame, text="　", command=button_action9)
+button9.grid(row=4, column=2, padx=10, pady=10)
+
+# ラベルを作成し、3列にまたがるように配置
+label2 = tk.Label(frame, text="あなたは⚪︎です", font=("Arial", 24), bg=bg_color, fg=fg_color)
+label2.grid(row=0, column=0, columnspan=3, pady=10)
+
+# リセットボタンを作成し、label2の下に配置
+reset_button = tk.Button(frame, text="リセット", command=lambda: reset_game())
+reset_button.grid(row=1, column=0, columnspan=3, pady=10)
+
+# 状況表示ラベルを配置
+label1 = tk.Label(frame, text="", bg=bg_color, fg=fg_color)
+label1.grid(row=5, column=0, columnspan=3, pady=10)
+
+# ゲームをリセットする関数
+def reset_game():
+    global board
+    board = [["" for _ in range(3)] for _ in range(3)]
+    for button in [button1, button2, button3, button4, button5, button6, button7, button8, button9]:
+        button.config(text="　", state="normal")
+    label1.config(text="")
+
+# メインウィンドウのループ
+window.mainloop()

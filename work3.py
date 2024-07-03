@@ -16,7 +16,12 @@ def button_action():  # 関数の定義 ※ボタンが押されたときの動�
     for i in name_list:
         name_out+=f"{i}\n"
     label1.config(text=f"{name_out}\n")  # 画面に出力
-
+# user_input = entry1.get()
+# name_list.append(user_input)
+# formatted_str = ""
+# for name in mame list:
+#     formatted_str += "\n".join(name_list)
+#     label1.config(text=formatted_str)
 
 # 入力フィールドの作成
 label = tk.Label(window,text="名前を入力してください", bg=fg_color, fg=bg_color)
