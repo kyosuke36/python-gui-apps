@@ -138,6 +138,7 @@ def button_action1():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
@@ -150,6 +151,7 @@ def button_action2():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
@@ -163,6 +165,7 @@ def button_action3():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
@@ -175,6 +178,7 @@ def button_action4():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
@@ -189,6 +193,7 @@ def button_action5():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
@@ -201,6 +206,7 @@ def button_action6():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
@@ -214,6 +220,7 @@ def button_action7():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
@@ -226,6 +233,7 @@ def button_action8():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
@@ -239,6 +247,7 @@ def button_action9():
         winner = check_winner()
         if winner:
             label1.config(text=f"{winner}の勝ちです！", font=("Arial", 24))
+            a()
         else:
             computer_move()
 
